@@ -1,0 +1,367 @@
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <!-- Compiled and minified CSS -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
+  <title>SmartPay</title>
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"
+        integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+
+    <!-- Google fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Pacifico&display=swap" rel="stylesheet">
+
+    <link rel="stylesheet" href="dashboard.css">
+    <script src="https://smtpjs.com/v3/smtp.js"></script>
+</head>
+<body class="grey lighten-3"">
+
+  <nav class="navbar navbar-expand-lg navbar-dark bg-dark navbar-fixed-top">
+    <a class="navbar-brand" href="#">Vikram Cements, Neemuch</a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
+        aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+    </button>
+
+    <div class="collapse navbar-collapse navbar-dark bg-dark" id="navbarSupportedContent">
+        <ul class="navbar-nav mr-auto">
+            <li class="nav-item">
+                <a class="nav-link" href="#">About Us<span class="sr-only">(current)</span></a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="#">Contact</a>
+            </li>
+        </ul>
+        <ul class="nav navbar-nav navbar-right" id="navbarright">
+            <li class="nav-item logged-out">
+                <a class="nav-link modal-trigger" data-target="modal-signup" href="#">Sign Up</a>
+            </li>
+            <li class="nav-item logged-out">
+                <a class="nav-link modal-trigger" href="#" data-target="modal-login">Login</a>
+            </li>
+            <li class="nav-item logged-in">
+              <a class="nav-link" href="#" id="logout">Logout</a>
+          </li>
+        </ul>
+    </div>
+</nav>
+
+<!--sidebar start-->
+<div id="side" class="sidebar d-none d-xl-block container-fluid">
+    <center>
+        <img src="data:image/jpeg;base64,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" 
+        class="profile_image" alt="">
+        <h2 id="currentuser"></h2>
+        <h3 id="colonyname"></h3>
+        <h3 id="quarterno"></h3>
+    </center>
+    <!-- <a href="#"><span>Dashboard</span></a>
+    <a href="#"><span>Gym</span></a>
+    <a href="#"><span>Tables</span></a>
+    <a href="#"><span>Payments</span></a>
+    <a href="#"><span>About</span></a>
+    <a href="#"><span>Settings</span></a> -->
+</div>
+
+<h1 class="Display-3 text-dark">Dashboard</h1>
+
+  <!-- NAVBAR -->
+  <!-- <nav class="z-depth-0 grey lighten-4">
+    <div class="nav-wrapper container">
+      <!-- <a href="#" class="brand-logo">
+        <img src="img/logo.svg" style="width: 180px; margin-top: 10px;">
+      </a> -->
+      <!-- <ul id="nav-mobile" class="right hide-on-med-and-down">
+          <li class="logged-in">
+            <a href="#" class="grey-text modal-trigger" data-target="modal-account">Account</a>
+          </li>
+          <li class="logged-in">
+            <a href="#" class="grey-text" id="logout">Logout</a>
+          </li>
+          <li class="logged-in">
+            <a href="#" class="grey-text modal-trigger" data-target="modal-create">Create Guide</a>
+          </li>
+          <li class="logged-out">
+            <a href="#" class="grey-text modal-trigger" data-target="modal-login">Login</a>
+          </li>
+          <li class="logged-out">
+            <a href="#" class="grey-text modal-trigger" data-target="modal-signup">Sign up</a>
+          </li>
+        </span>
+      </ul>
+    </div>
+  </nav> --> 
+
+  <!-- SIGN UP MODAL -->
+  <div id="modal-signup" class="modal">
+    <div class="modal-content">
+      <h4>Sign up</h4><br />
+      <form id="signup-form">
+        <div class="input-field">
+          <input type="text" id="username" required />
+          <label for="username">Username</label>
+        </div>
+        <div class="input-field">
+          <input type="number" id="employee-number" required />
+          <label for="employee-number">Employee number</label>
+        </div>
+        <div class="input-field">
+          <input type="text" id="colony" required />
+          <label for="colony">Enter colony</label>
+        </div>
+        <div class="input-field">
+          <input type="number" id="quarter-no" required />
+          <label for="quarter-no">Quarter number</label>
+        </div>
+        <div class="input-field">
+          <input type="email" id="signup-email" required />
+          <label for="signup-email">Email address</label>
+        </div>
+        <div class="input-field">
+          <input type="password" id="signup-password" required />
+          <label for="signup-password">Choose password</label>
+        </div>
+        <button class="btn yellow darken-2 z-depth-0">Sign up</button>
+        <label id="passwordalert"></label>
+      </form>
+    </div>
+  </div>
+
+  <!-- LOGIN MODAL -->
+   <div id="modal-login" class="modal"> 
+    <!-- <div class="modal-content">
+      <h4>Login</h4><br />
+      <form id="login-form">
+        <div class="input-field">
+          <input type="email" id="login-email" required />
+          <label for="login-email">Email address</label>
+        </div>
+        <div class="input-field">
+          <input type="password" id="login-password" required />
+          <label for="login-password">Your password</label>
+        </div>
+        <button class="btn yellow darken-2 z-depth-0">Login</button>
+      </form>
+    </div> --> 
+    <div class ="form-box modal-content">
+      <h1>Login Here</h1>
+      <form id="login-form">
+      <div class="input-box">
+        <i class="fa fa-envelope-o"></i>
+        <input type="email" placeholder="Email Id" id="login-email" required />
+      </div>
+  
+      <div class="input-box">
+        <i class="fa fa-key"></i>
+        <input type="password" placeholder="Password" class="check1" id="login-password" required />
+        <span class="eye" >
+          <i id="hide1" class="fa fa-eye"></i>
+          <i id="hide2" class="fa fa-eye-slash"></i>
+        </span>
+      </div>
+      <center><button class="btn btn-info" onclick="passwordreset();">Forgot password</button></center>
+      <button type="submit" class="btn login-btn">Login</button>
+     </form>
+  </div>
+  </div>
+
+  <!-- ACCOUNT MODAL -->
+  <!-- <div id="modal-account" class="modal">
+    <div class="modal-content center-align">
+      <h4>Account details</h4><br />
+      <div class="account-details"></div>
+    </div>
+  </div> -->
+
+  <!-- CREATE GUIDE MODAL -->
+  <!-- <div id="modal-create" class="modal">
+    <div class="modal-content">
+      <h4>Create Guide</h4><br />
+      <form id="create-form">
+        <div class="input-field">
+          <input type="text" id="title" required>
+          <label for="title">Guide Title</label>
+        </div>
+        <div class="input-field">
+          <textarea id="content" class="materialize-textarea" required></textarea>
+          <label for="content">Guide Content</label>
+        </div>
+        <button class="btn yellow darken-2 z-depth-0">Create</button>
+      </form>
+    </div>
+  </div> -->
+
+  <!-- GUIDE LIST -->
+  <!-- <div id="guide" class="container" style="margin-top: 40px;"> -->
+    <!-- <ul class="collapsible z-depth-0 guides" style="border: none;">
+      <li>
+        <div class="collapsible-header grey lighten-4">Guide title</div>
+        <div class="collapsible-body white">Lorem ipsum dolor sit amet.</div>
+      </li>
+      <li>
+        <div class="collapsible-header grey lighten-4">Guide title</div>
+        <div class="collapsible-body white"><span>Lorem ipsum dolor sit amet.</span></div>
+      </li>
+      <li>
+        <div class="collapsible-header grey lighten-4">Guide title</div>
+        <div class="collapsible-body white"><span>Lorem ipsum dolor sit amet.</span></div>
+      </li>
+      <li>
+        <div class="collapsible-header grey lighten-4">Guide title</div>
+        <div class="collapsible-body white"><span>Lorem ipsum dolor sit amet.</span></div>
+      </li>
+    </ul> -->
+  <!-- </div> -->
+
+  <form method="post" id="empnoandamt">
+  <input type="text" id="getempno" name="empno" placeholder="enter employee no">
+  <input type="text" id="getamt" placeholder="enter amount">
+   <!-- <input id="sub" type="submit" value="submit">  -->
+  </form>
+  <button id="btn_to_update" class="btn btn-primary" onclick="update();">Submit</button> 
+   
+  
+  <!-- Displaying details if its user and not operator -->
+  <div id="user_display">
+    <!-- <h1 id="welcome_user"></h1>
+    <h4>Amount spent at petrolpump</h4>
+    <h6 id="petrolpump_amt"></h6> -->
+    <!-- Table starts  -->
+    <div class="container">
+      <table class="table table-striped ">
+          <thead>
+              <tr class="bg-dark text-light" id="heading">
+                  <th scope="col">S.No </th>
+                  <th scope="col">Campus facility</th>
+                  <th scope="col">Amount you owe</th>
+                  
+                  
+              </tr>
+          </thead>
+          <tbody>
+              <tr>
+                  <th scope="row">1</th>
+                  <td>Petrol pump</td>
+                  <td id="petrolpump_amt"></td>
+                  
+              </tr>
+              <tr>
+                  <th scope="row">2</th>
+                  <td>Co-operative</td>
+                  <td>0</td>
+                
+              </tr>
+              <tr>
+                  <th scope="row">3</th>
+                  <td>Swimming pool</td>
+                  <td>0</td>
+                
+              </tr>
+              <tr>
+                  <th scope="row">4</th>
+                  <td>Gym</td>
+                  <td>0</td>
+                
+              </tr>
+              <tr>
+                  <th scope="row">5</th>
+                  <td>Hospital</td>
+                  <td>0</td>
+                
+              </tr>
+              <tr>
+                  <th scope="row">6</th>
+                  <td>Cine club</td>
+                  <td>0</td>
+                
+              </tr>
+              <tr>
+                  <th scope="row">7</th>
+                  <td>Aditya Birla Senior Sec. School</td>
+                  <td>0</td>
+                
+              </tr>
+              <tr>
+                <th scope="row">8</th>
+                <td>Aditya Birla Hindi Senior Sec. School</td>
+                <td>0</td>
+              
+              </tr>
+              <tr>
+                  <th scope="row">9</th>
+                  <td>Rajshree Mahila Mandal</td>
+                  <td>0</td>
+                
+              </tr>
+              <tr>
+                  <th scope="row">10</th>
+                  <td> Transportation facility to Neemuch City</td>
+                  <td>0</td>
+                
+              </tr>
+              <tr>
+                  <th scope="row">11</th>
+                  <td> Staff Club Dome</td>
+                  <td>0</td>
+                
+              </tr>
+          </tbody>
+      </table>
+  </div>
+
+  </div>
+
+  <!-- The core Firebase JS SDK is always required and must be listed first -->
+  <script src="https://www.gstatic.com/firebasejs/7.15.0/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/7.15.0/firebase-auth.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/7.15.0/firebase-firestore.js"></script>
+<!-- TODO: Add SDKs for Firebase products that you want to use
+     https://firebase.google.com/docs/web/setup#available-libraries -->
+<script src="https://www.gstatic.com/firebasejs/7.15.0/firebase-analytics.js"></script>
+
+
+<script src="https://code.jquery.com/jquery-3.4.1.slim.min.js"
+        integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n"
+        crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"
+        integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo"
+        crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"
+        integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6"
+        crossorigin="anonymous"></script>
+    
+
+<script>
+  // Your web app's Firebase configuration
+  var firebaseConfig = {
+    apiKey: "AIzaSyD7SO0LOncavCoBdGWtS1tOJCTZtFEYT04",
+    authDomain: "vikram-cement.firebaseapp.com",
+    databaseURL: "https://vikram-cement.firebaseio.com",
+    projectId: "vikram-cement",
+    storageBucket: "vikram-cement.appspot.com",
+    messagingSenderId: "478167588614",
+    appId: "1:478167588614:web:13855203507dcdfc084887",
+    measurementId: "G-NF05B1C9S4"
+  };
+  // Initialize Firebase
+  firebase.initializeApp(firebaseConfig);
+  firebase.analytics();
+
+  //make auth and firebase for references
+  const auth = firebase.auth();
+  const db = firebase.firestore();
+
+  //update firestore settings
+  db.settings({ timestampsInSnapshots: true });
+</script>
+
+  <!-- Compiled and minified JavaScript -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
+  <script src="scripts/auth.js"></script>
+  <script src="scripts/index.js"></script>
+</body>
+</html>
